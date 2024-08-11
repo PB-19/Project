@@ -8,9 +8,6 @@ def extract_yt_term(command):
 
 def remove_words(input_string, words_to_remove):
     words = input_string.strip().split()
-    print(words)
     filtered_words = [word for word in words if word.lower() not in words_to_remove]
-    print(filtered_words)
     result_string = " ".join(filtered_words)
-    print(result_string)
     return result_string

@@ -109,7 +109,6 @@ def findContact(query):
 
         cursor.execute(f"SELECT mobile_no FROM contacts WHERE name = '{query}'")
         results = cursor.fetchall()
-        print(results)
         mobile_number = results[0][0]
         if not mobile_number.startswith("+91"):
             mobile_number = "+91"+mobile_number
