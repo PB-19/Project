@@ -1,18 +1,21 @@
 import re
+import subprocess
 import webbrowser
 import eel
 import sqlite3
 import os
+import pyautogui
 import pywhatkit as kit
 import pvporcupine
 import pyaudio
 import time
 import struct
 
+from pipes import quote
 from playsound import playsound
 from engine.config import ASSISTANT_NAME
 from engine.command import speak
-from engine.helper import extract_yt_term
+from engine.helper import extract_yt_term, remove_words
 
 conn = sqlite3.connect("jarvis.db")
 cursor = conn.cursor()
@@ -96,3 +99,48 @@ def hotword():
             audio_stream.close()
         if paud is not None:
             paud.terminate()
+
+def findContact(query):
+    words_to_remove = [ASSISTANT_NAME, "make", "a", "phone", "call", "to", "send", "message", "whatsapp", "video", ""]
+    query = remove_words(query,words_to_remove)
+
+    try:
+        query = query.strip().capitalize()
+
+        cursor.execute(f"SELECT mobile_no FROM contacts WHERE name = '{query}'")
+        results = cursor.fetchall()
+        print(results)
+        mobile_number = results[0][0]
+        if not mobile_number.startswith("+91"):
+            mobile_number = "+91"+mobile_number
+        
+        return mobile_number, query
+    except: 
+        speak("Not found...")
+        return 0, 0
+    
+def whatsapp(mobile_no, message, flag, name):
+    if flag=="message":
+        target_tab = 12
+        jarvis_message = "Message successfully sent to "+name
+    elif flag=="call":
+        target_tab = 7
+        jarvis_message = "Calling "+name
+    else:
+        target_tab = 6
+        jarvis_message = "Starting video call with "+name
+
+    encoded_message = quote(message)
+    whatsapp_url = f"whatsapp://send?phone={mobile_no}&text={encoded_message}"
+    full_command = f'start "" "{whatsapp_url}"'
+
+    subprocess.run(full_command,shell=True)
+    time.sleep(5)
+    subprocess.run(full_command,shell=True)
+
+    pyautogui.hotkey("ctrl","f")
+
+    for i in range(1,target_tab): pyautogui.hotkey("tab")
+    pyautogui.hotkey("enter")
+    speak(jarvis_message)
+    
