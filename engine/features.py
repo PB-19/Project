@@ -130,7 +130,7 @@ def whatsapp(mobile_no, message, flag, name):
         jarvis_message = "Starting video call with "+name
 
     encoded_message = quote(message)
-    whatsapp_url = f"whatsapp://send?phone={mobile_no}&text={encoded_message}"
+    whatsapp_url = f"whatsapp://send?phone={mobile_no}&text={encoded_message[1:-1]}"
     full_command = f'start "" "{whatsapp_url}"'
 
     subprocess.run(full_command,shell=True)
