@@ -4,6 +4,7 @@ import webbrowser
 import eel
 import sqlite3
 import os
+from hugchat import hugchat
 import pyautogui
 import pywhatkit as kit
 import pvporcupine
@@ -143,3 +144,12 @@ def whatsapp(mobile_no, message, flag, name):
     pyautogui.hotkey("enter")
     speak(jarvis_message)
     
+def chatbot(query):
+    user_input = query.lower()
+    chatbot = hugchat.ChatBot(cookie_path = r"engine/cookies.json")
+    id = chatbot.new_conversation()
+    chatbot.change_conversation(id)
+    response = chatbot.chat(user_input)
+    print(response)
+    speak(response)
+    return response

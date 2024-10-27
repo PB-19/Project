@@ -4,6 +4,7 @@ import speech_recognition as sr
 import eel
 
 def speak(text):
+    text=str(text)
     engine = pyttsx3.init()
     engine.setProperty('rate', 125)
     eel.DisplayMessage(text)
@@ -66,7 +67,8 @@ def allCommands(message=1):
                     flag = "video call"
                 whatsapp(contact_no,query,flag,name)
         else:
-            pass
+            from engine.features import chatbot
+            chatbot(query)
     except:
         pass
     
