@@ -153,3 +153,9 @@ def chatbot(query):
     print(response)
     speak(response)
     return response
+
+def makeCall(name, mobileNo):
+    mobileNo = mobileNo.replace(" ","")
+    speak("Calling "+name)
+    command = "adb shell am start -a android.intent.action.CALL -d tel:"+mobileNo
+    os.system(command)
